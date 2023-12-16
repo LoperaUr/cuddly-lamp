@@ -1,5 +1,6 @@
 package com.anbq.cuddlylamp.infrastructure.configuration;
 
+import com.anbq.cuddlylamp.domain.spi.IRolePersistencePort;
 import com.anbq.cuddlylamp.infrastructure.output.jpa.adapter.UserJpaAdapter;
 import com.anbq.cuddlylamp.infrastructure.output.jpa.repository.IUserRepository;
 import com.anbq.cuddlylamp.domain.api.IUserServicePort;
@@ -18,6 +19,8 @@ public class BeanConfiguration {
 
     private final IUserRepository userRepository;
     private final UserEntityMapper userEntityMapper;
+    private final IRolePersistencePort rolePersistencePort;
+
 
     @Bean
     public PasswordEncoder encoder() {
@@ -25,13 +28,13 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public IUserPersistencePort userPersistencePort () {
+    public IUserPersistencePort userPersistencePort() {
         return new UserJpaAdapter(userRepository, userEntityMapper);
     }
 
     @Bean
-    public IUserServicePort userServicePort () {
-        return new UserUseCase(userPersistencePort());
+    public IUserServicePort userServicePort() {
+        return new UserUseCase(userPersistencePort(), rolePersistencePort);
     }
 
 }
